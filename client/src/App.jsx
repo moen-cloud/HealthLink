@@ -7,7 +7,7 @@ import ProtectedRoute from './components/common/ProtectedRoute';
 // Public Pages
 import LandingPage from './pages/LandingPage';
 import Login from './pages/Login';
-import Register from './pages/Register';
+import Register from './pages/Register.jsx';
 import Articles from './pages/Articles';
 import ArticleDetail from './pages/ArticleDetail';
 
