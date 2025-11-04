@@ -1,15 +1,17 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+// Use frontend .env for backend URL, fallback to localhost
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
+// Create axios instance with base URL including /api
 const axiosInstance = axios.create({
-  baseURL: API_URL,
+  baseURL: `${API_URL}/api`, // <-- important fix
   headers: {
     'Content-Type': 'application/json'
   }
 });
 
-// Add token to requests if available
+// Add JWT token to requests if available
 axiosInstance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -18,9 +20,7 @@ axiosInstance.interceptors.request.use(
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 // Handle response errors
