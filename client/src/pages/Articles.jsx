@@ -9,13 +9,13 @@ const Articles = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
 
   const categories = [
-    { value: 'all', label: 'All Articles', icon: '📚' },
-    { value: 'general', label: 'General', icon: '🏥' },
-    { value: 'nutrition', label: 'Nutrition', icon: '🥗' },
-    { value: 'mental-health', label: 'Mental Health', icon: '🧠' },
-    { value: 'fitness', label: 'Fitness', icon: '💪' },
-    { value: 'diseases', label: 'Diseases', icon: '🦠' },
-    { value: 'prevention', label: 'Prevention', icon: '🛡️' }
+    { value: 'all', label: 'All Articles'},
+    { value: 'general', label: 'General'},
+    { value: 'nutrition', label: 'Nutrition'},
+    { value: 'mental-health', label: 'Mental Health'},
+    { value: 'fitness', label: 'Fitness'},
+    { value: 'diseases', label: 'Diseases'},
+    { value: 'prevention', label: 'Prevention'}
   ];
 
   useEffect(() => {

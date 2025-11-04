@@ -46,16 +46,16 @@ const SymptomChecker = () => {
   };
 
   const symptomsList = [
-    { key: 'fever', label: 'Fever', icon: '🌡️' },
-    { key: 'cough', label: 'Cough', icon: '😷' },
-    { key: 'difficultyBreathing', label: 'Difficulty Breathing', icon: '💨' },
-    { key: 'weakness', label: 'Weakness/Fatigue', icon: '😓' },
-    { key: 'headache', label: 'Headache', icon: '🤕' },
-    { key: 'bodyAches', label: 'Body Aches', icon: '💪' },
-    { key: 'soreThroat', label: 'Sore Throat', icon: '🗣️' },
-    { key: 'nausea', label: 'Nausea/Vomiting', icon: '🤢' },
-    { key: 'diarrhea', label: 'Diarrhea', icon: '🚽' },
-    { key: 'chestPain', label: 'Chest Pain', icon: '💔' }
+    { key: 'fever', label: 'Fever'},
+    { key: 'cough', label: 'Cough'},
+    { key: 'difficultyBreathing', label: 'Difficulty Breathing'},
+    { key: 'weakness', label: 'Weakness/Fatigue'},
+    { key: 'headache', label: 'Headache'},
+    { key: 'bodyAches', label: 'Body Aches'},
+    { key: 'soreThroat', label: 'Sore Throat'},
+    { key: 'nausea', label: 'Nausea/Vomiting'},
+    { key: 'diarrhea', label: 'Diarrhea'},
+    { key: 'chestPain', label: 'Chest Pain'}
   ];
 
   if (submitted && result) {
@@ -70,10 +70,10 @@ const SymptomChecker = () => {
 
     const getRiskIcon = () => {
       switch (result.riskLevel) {
-        case 'low': return '✅';
-        case 'medium': return '🟡';
-        case 'high': return '⚠️';
-        default: return '📋';
+        case 'low': return ;
+        case 'medium': return ;
+        case 'high': return ;
+        default: return ;
       }
     };
 

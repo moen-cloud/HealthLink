@@ -87,14 +87,14 @@ const Login = () => {
                 onClick={() => fillDemoCredentials('doctor')}
                 className="px-4 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white text-sm rounded-lg hover:shadow-md transition-all font-medium"
               >
-                👨‍⚕️ Doctor
+                Doctor
               </button>
               <button
                 type="button"
                 onClick={() => fillDemoCredentials('patient')}
                 className="px-4 py-2.5 bg-gradient-to-r from-green-500 to-green-600 text-white text-sm rounded-lg hover:shadow-md transition-all font-medium"
               >
-                🙋 Patient
+                Patient
               </button>
             </div>
           </div>

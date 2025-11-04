@@ -72,7 +72,7 @@ const PatientDashboard = () => {
         {/* Welcome Header */}
         <div className="mb-8 fade-in">
           <h1 className="text-4xl font-bold text-gray-900 mb-2">
-            Welcome back, {user?.name}! 👋
+            Welcome back, {user?.name}! 
           </h1>
           <p className="text-gray-600">Here's your health overview</p>
         </div>
