@@ -1,62 +1,77 @@
-HealthLink Backend API
+# HealthLink Backend API
+
 Digital E-Clinic & Triage System built with MERN stack supporting SDG 3 (Good Health and Well-being).
-🚀 Quick Start
-Prerequisites
 
-Node.js (v16 or higher)
-MongoDB (local or Atlas)
-npm or yarn
+##  Quick Start
 
-Installation
+### Prerequisites
+- Node.js (v16 or higher)
+- MongoDB (local or Atlas)
+- npm or yarn
 
-Clone the repository
+### Installation
 
-bash cd backend
+1. **Clone the repository**
+```bash
+cd server
+```
 
-Install dependencies
+2. **Install dependencies**
+```bash
+npm install
+```
 
-bash npm install
+3. **Configure environment variables**
+```bash
+cp .env.example .env
+```
 
-Configure environment variables
-
-bashcp .env.example .env
-Edit .env with your settings:
-envPORT=5000
+Edit `.env` with your settings:
+```env
+PORT=5000
 NODE_ENV=development
 MONGODB_URI=mongodb://localhost:27017/healthlink
 JWT_SECRET=your_secret_key_here
 JWT_EXPIRE=7d
 CLIENT_URL=http://localhost:5173
+```
 
-Start MongoDB (if running locally)
+4. **Start MongoDB** (if running locally)
+```bash
+mongod
+```
 
-bashmongod
+5. **Seed the database** (optional)
+```bash
+npm run seed
+```
 
-Seed the database (optional)
-
-bash npm run seed
-
-Start the server
-
-bash# Development mode (with nodemon)
+6. **Start the server**
+```bash
+# Development mode (with nodemon)
 npm run dev
 
 # Production mode
 npm start
-Server will run on http://localhost:5000
-Dummy Credentials
+```
+
+Server will run on `http://localhost:5000`
+
+##  Dummy Credentials
+
 After seeding, use these credentials:
-Doctor Account:
 
-Email: doctor@healthlink.com
-Password: doctor123
+**Doctor Account:**
+- Email: `doctor@healthlink.com`
+- Password: `doctor123`
 
-Patient Account:
+**Patient Account:**
+- Email: `patient@healthlink.com`
+- Password: `patient123`
 
-Email: patient@healthlink.com
-Password: patient123
+##  Project Structure
 
- Project Structure
+```
 /server
   /config
     db.js                 # Database configuration
@@ -86,122 +101,141 @@ Password: patient123
   seed.js             # Database seeder
   .env                # Environment variables
   package.json        # Dependencies
-🔌 API Endpoints
-Authentication
+```
+
+## 🔌 API Endpoints
+
+### Authentication
+```
 POST   /api/auth/register      Register new user
 POST   /api/auth/login         Login user
 GET    /api/auth/me           Get current user
-Users
+```
+
+### Users
+```
 GET    /api/users/profile      Get user profile
 PUT    /api/users/profile      Update profile
 POST   /api/users/medical-history  Add medical history
-Appointments
+```
+
+### Appointments
+```
 POST   /api/appointments              Create appointment (Patient)
 GET    /api/appointments              Get all appointments (Doctor)
 GET    /api/appointments/my-appointments  Get user's appointments (Patient)
 PUT    /api/appointments/:id          Update status (Doctor)
 DELETE /api/appointments/:id          Delete appointment
-Triage (Symptom Checker)
+```
+
+### Triage (Symptom Checker)
+```
 POST   /api/triage                Submit symptom check (Patient)
 GET    /api/triage                Get all triages (Doctor)
 GET    /api/triage/my-history     Get user's history (Patient)
 GET    /api/triage/:id           Get single triage
 PUT    /api/triage/:id/respond   Doctor response (Doctor)
-Articles
+```
+
+### Articles
+```
 GET    /api/articles              Get all published articles
 GET    /api/articles/:id          Get single article
 GET    /api/articles/category/:category  Get by category
 POST   /api/articles              Create article (Doctor)
 PUT    /api/articles/:id          Update article (Doctor)
 DELETE /api/articles/:id          Delete article (Doctor)
- Triage Logic
+```
+
+## Triage Logic
+
 The system uses rule-based assessment:
-High Risk:
 
-Fever + Cough + Difficulty Breathing
-Chest Pain
-Severe Difficulty Breathing
+**High Risk:**
+- Fever + Cough + Difficulty Breathing
+- Chest Pain
+- Severe Difficulty Breathing
 
-Medium Risk:
+**Medium Risk:**
+- Fever + (Weakness OR Headache OR Body Aches)
+- Multiple symptoms combination
 
-Fever + (Weakness OR Headache OR Body Aches)
-Multiple symptoms combination
+**Low Risk:**
+- Individual mild symptoms
+- No significant symptoms
 
-Low Risk:
+##  Authentication
 
-Individual mild symptoms
-No significant symptoms
+- JWT-based authentication
+- Token expires in 7 days (configurable)
+- Protected routes require `Authorization: Bearer <token>` header
+- Role-based access control (patient/doctor)
 
- Authentication
+##  Database Models
 
-JWT-based authentication
-Token expires in 7 days (configurable)
-Protected routes require Authorization: Bearer <token> header
-Role-based access control (patient/doctor)
+### User
+- name, email, password (hashed)
+- role: patient | doctor
+- phone, age, gender
+- medicalHistory array
 
- Database Models
-User
+### Appointment
+- userId, symptoms, preferredDate
+- status: pending | approved | rejected | completed
+- doctorNotes, reviewedBy, reviewedAt
 
-name, email, password (hashed)
-role: patient | doctor
-phone, age, gender
-medicalHistory array
+### Triage
+- userId, symptoms object (boolean flags)
+- riskLevel: low | medium | high
+- recommendation (auto-generated)
+- doctorResponse, respondedBy
 
-Appointment
+### Article
+- title, content, thumbnail
+- category: general | nutrition | mental-health | fitness | diseases | prevention
+- author (doctor), published, views
 
-userId, symptoms, preferredDate
-status: pending | approved | rejected | completed
-doctorNotes, reviewedBy, reviewedAt
+## Technologies
 
-Triage
+- **Node.js & Express** - Server framework
+- **MongoDB & Mongoose** - Database
+- **JWT** - Authentication
+- **bcryptjs** - Password hashing
+- **express-validator** - Input validation
+- **cors** - Cross-origin requests
 
-userId, symptoms object (boolean flags)
-riskLevel: low | medium | high
-recommendation (auto-generated)
-doctorResponse, respondedBy
+## Deployment
 
-Article
+### Render (Recommended for Backend)
 
-title, content, thumbnail
-category: general | nutrition | mental-health | fitness | diseases | prevention
-author (doctor), published, views
+1. Create a new Web Service on Render
+2. Connect your GitHub repository
+3. Configure:
+   - **Build Command:** `npm install`
+   - **Start Command:** `npm start`
+4. Add environment variables in Render dashboard
+5. Deploy!
 
- Technologies
+### MongoDB Atlas
 
-Node.js & Express - Server framework
-MongoDB & Mongoose - Database
-JWT - Authentication
-bcryptjs - Password hashing
-express-validator - Input validation
-cors - Cross-origin requests
+1. Create a free cluster at [mongodb.com/cloud/atlas](https://www.mongodb.com/cloud/atlas)
+2. Get connection string
+3. Update `MONGODB_URI` in your environment variables
 
- Deployment
-Render (Recommended for Backend)
+##  Scripts
 
-Create a new Web Service on Render
-Connect your GitHub repository
-Configure:
-
-Build Command: npm install
-Start Command: npm start
-
-
-Add environment variables in Render dashboard
-Deploy!
-
-MongoDB Atlas
-
-Create a free cluster at mongodb.com/cloud/atlas
-Get connection string
-Update MONGODB_URI in your environment variables
-
- Scripts
-bashnpm start       # Start production server
+```bash
+npm start       # Start production server
 npm run dev     # Start development server with nodemon
 npm run seed    # Seed database with dummy data
- Testing Endpoints
+```
+
+## 🧪 Testing Endpoints
+
 Use Postman, Thunder Client, or curl:
-bash# Health check
+
+```bash
+# Health check
 curl http://localhost:5000/api/health
 
 # Register user
@@ -213,31 +247,40 @@ curl -X POST http://localhost:5000/api/auth/register \
 curl -X POST http://localhost:5000/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"doctor@healthlink.com","password":"doctor123"}'
-🔒 Security Features
+```
 
-Password hashing with bcrypt
-JWT token authentication
-Role-based authorization
-Input validation on all endpoints
-CORS configured
-MongoDB injection protection via Mongoose
+##  Security Features
 
-📈 Future Enhancements
+- Password hashing with bcrypt
+- JWT token authentication
+- Role-based authorization
+- Input validation on all endpoints
+- CORS configured
+- MongoDB injection protection via Mongoose
 
- Email notifications
- Real-time chat with Socket.io
- File upload for medical documents
- Appointment reminders
- Video consultation integration
- Payment gateway
- Multi-language support
- SMS notifications
+##  Future Enhancements
 
- Contributing
+- [ ] Email notifications
+- [ ] Real-time chat with Socket.io
+- [ ] File upload for medical documents
+- [ ] Appointment reminders
+- [ ] Video consultation integration
+- [ ] Payment gateway
+- [ ] Multi-language support
+- [ ] SMS notifications
+
+##  Contributing
+
 This is an educational project for SDG 3. Feel free to fork and improve!
- License
+
+##  License
+
 MIT License - feel free to use for learning and development.
- Support
+
+##  Support
+
 For issues or questions, please create an issue in the repository.
 
-Built with love for SDG 3: Good Health and Well-being
+---
+
+**Built with  for SDG 3: Good Health and Well-being**
