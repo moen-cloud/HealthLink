@@ -1,0 +1,37 @@
+name: Frontend CI (Tests & Build)
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        # Assuming client code is in a 'client' subdirectory:
+        run: cd client && npm install
+
+      - name: Run frontend lint check
+        # This executes the 'lint' script from your package.json
+        run: cd client && npm run lint
+
+      - name: Run placeholder frontend tests
+        # This will execute your placeholder "test" script after you add it
+        run: cd client && npm test
+
+      - name: Build production app
+        # This runs the 'build' script to confirm a successful static build
+        run: cd client && npm run build
