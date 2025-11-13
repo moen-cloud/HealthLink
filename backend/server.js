@@ -8,7 +8,6 @@ const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
 const appointmentRoutes = require('./routes/appointments');
 const triageRoutes = require('./routes/triage');
-const articleRoutes = require('./routes/articles');
 
 // Initialize app
 const app = express();
@@ -37,7 +36,6 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/appointments', appointmentRoutes);
 app.use('/api/triage', triageRoutes);
-app.use('/api/articles', articleRoutes);
 
 // Health check route
 app.get('/api/health', (req, res) => {
@@ -58,7 +56,6 @@ app.get('/', (req, res) => {
       users: '/api/users',
       appointments: '/api/appointments',
       triage: '/api/triage',
-      articles: '/api/articles',
       health: '/api/health'
     }
   });

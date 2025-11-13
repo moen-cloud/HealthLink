@@ -36,13 +36,3 @@ export const triageAPI = {
   getById: (id) => axios.get(`/triage/${id}`),
   respond: (id, data) => axios.put(`/triage/${id}/respond`, data)
 };
-
-// ✅ Articles API
-export const articleAPI = {
-  getAll: (params) => axios.get('/articles', { params }),
-  getById: (id) => axios.get(`/articles/${id}`),
-  getByCategory: (category) => axios.get(`/articles/category/${category}`),
-  create: (data) => axios.post('/articles', data),
-  update: (id, data) => axios.put(`/articles/${id}`, data),
-  delete: (id) => axios.delete(`/articles/${id}`)
-};

@@ -36,9 +36,6 @@ const Navbar = () => {
                       className="text-gray-700 hover:text-purple-600 transition-colors font-medium">
                   Dashboard
                 </Link>
-                <Link to="/articles" className="text-gray-700 hover:text-purple-600 transition-colors font-medium">
-                  Health Articles
-                </Link>
                 <div className="flex items-center space-x-4">
                   <div className="flex items-center space-x-2">
                     <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
@@ -58,9 +55,6 @@ const Navbar = () => {
               </>
             ) : (
               <>
-                <Link to="/articles" className="text-gray-700 hover:text-purple-600 transition-colors font-medium">
-                  Health Articles
-                </Link>
                 <Link to="/login" className="text-gray-700 hover:text-purple-600 transition-colors font-medium">
                   Login
                 </Link>
@@ -98,9 +92,6 @@ const Navbar = () => {
                       className="block py-2 text-gray-700 hover:text-purple-600 transition-colors">
                   Dashboard
                 </Link>
-                <Link to="/articles" className="block py-2 text-gray-700 hover:text-purple-600 transition-colors">
-                  Health Articles
-                </Link>
                 <div className="pt-2 border-t border-gray-200 mt-2">
                   <p className="text-sm text-gray-600 mb-2">Logged in as {user?.name}</p>
                   <button
@@ -113,9 +104,6 @@ const Navbar = () => {
               </>
             ) : (
               <>
-                <Link to="/articles" className="block py-2 text-gray-700 hover:text-purple-600 transition-colors">
-                  Health Articles
-                </Link>
                 <Link to="/login" className="block py-2 text-gray-700 hover:text-purple-600 transition-colors">
                   Login
                 </Link>

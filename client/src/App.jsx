@@ -8,8 +8,6 @@ import ProtectedRoute from './components/common/ProtectedRoute';
 import LandingPage from './pages/LandingPage';
 import Login from './pages/Login';
 import Register from './pages/Register.jsx';
-import Articles from './pages/Articles';
-import ArticleDetail from './pages/ArticleDetail';
 
 // Patient Pages
 import PatientDashboard from './pages/patient/PatientDashboard';
@@ -22,7 +20,6 @@ import TriageHistory from './pages/patient/TriageHistory';
 import DoctorDashboard from './pages/doctor/DoctorDashboard';
 import ManageAppointments from './pages/doctor/ManageAppointments';
 import ManageTriages from './pages/doctor/ManageTriages';
-import ManageArticles from './pages/doctor/ManageArticles';
 
 function App() {
   return (
@@ -36,8 +33,6 @@ function App() {
               <Route path="/" element={<LandingPage />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
-              <Route path="/articles" element={<Articles />} />
-              <Route path="/articles/:id" element={<ArticleDetail />} />
 
               {/* Patient Routes */}
               <Route
@@ -103,14 +98,6 @@ function App() {
                 element={
                   <ProtectedRoute requiredRole="doctor">
                     <ManageTriages />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/doctor/articles"
-                element={
-                  <ProtectedRoute requiredRole="doctor">
-                    <ManageArticles />
                   </ProtectedRoute>
                 }
               />
