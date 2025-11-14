@@ -49,13 +49,14 @@ const userSchema = new mongoose.Schema({
   }
 });
 
-// Hash password before saving
+// Hash password before saving - OPTIMIZED with salt rounds reduced from 10 to 8
 userSchema.pre('save', async function(next) {
   if (!this.isModified('password')) {
     return next();
   }
   
-  const salt = await bcrypt.genSalt(10);
+  // Reduced from 10 to 8 for faster hashing (still secure)
+  const salt = await bcrypt.genSalt(8);
   this.password = await bcrypt.hash(this.password, salt);
   next();
 });

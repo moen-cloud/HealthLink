@@ -11,5 +11,14 @@ export default defineConfig({
         changeOrigin: true
       }
     }
+  },
+  build: {
+    outDir: 'dist',
+    // Ensure SPA routing works
+    rollupOptions: {
+      output: {
+        manualChunks: undefined
+      }
+    }
   }
 })
