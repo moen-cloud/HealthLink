@@ -12,6 +12,10 @@ const userRoutes = require('./routes/users');
 const appointmentRoutes = require('./routes/appointments');
 const triageRoutes = require('./routes/triage');
 const chatRoutes = require('./routes/chat');
+const monitoringRoutes = require('./routes/monitoring');
+
+// Import automation utilities
+const { initializeCronJobs } = require('./utils/cronJobs');
 
 // Initialize app
 const app = express();
@@ -26,8 +30,10 @@ const io = new Server(server, {
   }
 });
 
-// Connect to database
-connectDB();
+// Connect to database (skip in test environment)
+if (process.env.NODE_ENV !== 'test') {
+  connectDB();
+}
 
 // Middleware
 app.use(cors({
@@ -51,6 +57,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/appointments', appointmentRoutes);
 app.use('/api/triage', triageRoutes);
 app.use('/api/chat', chatRoutes);
+app.use('/api', monitoringRoutes); // Health checks and monitoring
 
 // Health check route
 app.get('/api/health', (req, res) => {
@@ -115,7 +122,7 @@ io.use((socket, next) => {
 });
 
 io.on('connection', (socket) => {
-  console.log(` User connected: ${socket.userId}`);
+  console.log(`✅ User connected: ${socket.userId}`);
   
   // Store user's socket connection
   onlineUsers.set(socket.userId, socket.id);
@@ -152,7 +159,7 @@ io.on('connection', (socket) => {
 
   // Handle disconnection
   socket.on('disconnect', () => {
-    console.log(` User disconnected: ${socket.userId}`);
+    console.log(`❌ User disconnected: ${socket.userId}`);
     onlineUsers.delete(socket.userId);
     io.emit('user-offline', socket.userId);
   });
@@ -161,10 +168,21 @@ io.on('connection', (socket) => {
 // Start server
 const PORT = process.env.PORT || 5000;
 
-server.listen(PORT, () => {
-  console.log(`\n HealthLink Server running on port ${PORT}`);
-  console.log(` Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(` API URL: http://localhost:${PORT}`);
-  console.log(` Socket.io enabled`);
-  console.log(` Health check: http://localhost:${PORT}/api/health\n`);
-});
+// Start server (skip in test environment)
+if (process.env.NODE_ENV !== 'test') {
+  server.listen(PORT, () => {
+    console.log(`\n🚀 HealthLink Server running on port ${PORT}`);
+    console.log(`📍 Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`🌐 API URL: http://localhost:${PORT}`);
+    console.log(`💬 Socket.io enabled`);
+    console.log(`✅ Health check: http://localhost:${PORT}/api/health\n`);
+    
+    // Initialize automated tasks
+    if (process.env.NODE_ENV === 'production') {
+      initializeCronJobs();
+    }
+  });
+}
+
+// Export app for testing
+module.exports = app;
