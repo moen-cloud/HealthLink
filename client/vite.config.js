@@ -14,11 +14,15 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
-    // Ensure SPA routing works
     rollupOptions: {
       output: {
         manualChunks: undefined
       }
     }
+  },
+  // Fix for SPA routing
+  preview: {
+    port: 5173,
+    strictPort: true
   }
 })

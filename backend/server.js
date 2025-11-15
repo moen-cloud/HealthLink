@@ -12,10 +12,6 @@ const userRoutes = require('./routes/users');
 const appointmentRoutes = require('./routes/appointments');
 const triageRoutes = require('./routes/triage');
 const chatRoutes = require('./routes/chat');
-const monitoringRoutes = require('./routes/monitoring');
-
-// Import automation utilities
-const { initializeCronJobs } = require('./utils/cronJobs');
 
 // Initialize app
 const app = express();
@@ -27,15 +23,13 @@ const io = new Server(server, {
     origin: [
       'http://localhost:5173',
       'http://127.0.0.1:5173',
-      process.env.CLIENT_URL || 'https://healthlink-client.onrender.com'
-    ],
+      'https://healthlink-client.onrender.com',
+      process.env.CLIENT_URL
+    ].filter(Boolean),
     methods: ['GET', 'POST'],
-    credentials: true,
-    allowedHeaders: ['Authorization']
+    credentials: true
   },
-  transports: ['websocket', 'polling'],
-  pingTimeout: 60000,
-  pingInterval: 25000
+  transports: ['websocket', 'polling']
 });
 
 // Connect to database (skip in test environment)
@@ -45,9 +39,15 @@ if (process.env.NODE_ENV !== 'test') {
 
 // Middleware
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'https://healthlink-client.onrender.com',
+  origin: [
+    'http://localhost:5173',
+    'http://127.0.0.1:5173',
+    'https://healthlink-client.onrender.com',
+    process.env.CLIENT_URL
+  ].filter(Boolean),
   credentials: true
 }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -65,14 +65,25 @@ app.use('/api/users', userRoutes);
 app.use('/api/appointments', appointmentRoutes);
 app.use('/api/triage', triageRoutes);
 app.use('/api/chat', chatRoutes);
-app.use('/api', monitoringRoutes); // Health checks and monitoring
 
 // Health check route
 app.get('/api/health', (req, res) => {
   res.status(200).json({
     success: true,
     message: 'HealthLink API is running',
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV
+  });
+});
+
+// Status check route
+app.get('/api/status', (req, res) => {
+  const mongoose = require('mongoose');
+  res.status(200).json({
+    success: true,
+    database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
+    uptime: process.uptime(),
+    memory: process.memoryUsage()
   });
 });
 
@@ -112,38 +123,36 @@ app.use((err, req, res, next) => {
 });
 
 // Socket.io Connection Handler
-const onlineUsers = new Map(); // userId -> socketId
+const onlineUsers = new Map();
 
 io.use((socket, next) => {
   try {
     const token = socket.handshake.auth.token;
     if (!token) {
-      return next(new Error('Authentication error'));
+      console.log('Socket: No token provided');
+      return next(new Error('Authentication error: No token'));
     }
     
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     socket.userId = decoded.id;
+    console.log('Socket authenticated for user:', decoded.id);
     next();
   } catch (err) {
-    next(new Error('Authentication error'));
+    console.error('Socket auth error:', err.message);
+    next(new Error('Authentication error: Invalid token'));
   }
 });
 
 io.on('connection', (socket) => {
   console.log(`✅ User connected: ${socket.userId}`);
   
-  // Store user's socket connection
   onlineUsers.set(socket.userId, socket.id);
-  
-  // Broadcast online status
   io.emit('user-online', socket.userId);
 
-  // Handle sending messages
   socket.on('send-message', async (data) => {
     const { receiverId, message, conversationId } = data;
-    
-    // Send to receiver if online
     const receiverSocketId = onlineUsers.get(receiverId);
+    
     if (receiverSocketId) {
       io.to(receiverSocketId).emit('receive-message', {
         senderId: socket.userId,
@@ -154,7 +163,6 @@ io.on('connection', (socket) => {
     }
   });
 
-  // Handle typing indicator
   socket.on('typing', (data) => {
     const receiverSocketId = onlineUsers.get(data.receiverId);
     if (receiverSocketId) {
@@ -165,7 +173,6 @@ io.on('connection', (socket) => {
     }
   });
 
-  // Handle disconnection
   socket.on('disconnect', () => {
     console.log(`❌ User disconnected: ${socket.userId}`);
     onlineUsers.delete(socket.userId);
@@ -173,10 +180,9 @@ io.on('connection', (socket) => {
   });
 });
 
-// Start server
+// Start server (skip in test environment)
 const PORT = process.env.PORT || 5000;
 
-// Start server (skip in test environment)
 if (process.env.NODE_ENV !== 'test') {
   server.listen(PORT, () => {
     console.log(`\n🚀 HealthLink Server running on port ${PORT}`);
@@ -184,11 +190,6 @@ if (process.env.NODE_ENV !== 'test') {
     console.log(`🌐 API URL: http://localhost:${PORT}`);
     console.log(`💬 Socket.io enabled`);
     console.log(`✅ Health check: http://localhost:${PORT}/api/health\n`);
-    
-    // Initialize automated tasks
-    if (process.env.NODE_ENV === 'production') {
-      initializeCronJobs();
-    }
   });
 }
 
