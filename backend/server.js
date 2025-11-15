@@ -24,10 +24,18 @@ const server = http.createServer(app);
 // Socket.io setup with CORS
 const io = new Server(server, {
   cors: {
-    origin: process.env.CLIENT_URL || 'https://healthlink-client.onrender.com',
+    origin: [
+      'http://localhost:5173',
+      'http://127.0.0.1:5173',
+      process.env.CLIENT_URL || 'https://healthlink-client.onrender.com'
+    ],
     methods: ['GET', 'POST'],
-    credentials: true
-  }
+    credentials: true,
+    allowedHeaders: ['Authorization']
+  },
+  transports: ['websocket', 'polling'],
+  pingTimeout: 60000,
+  pingInterval: 25000
 });
 
 // Connect to database (skip in test environment)
