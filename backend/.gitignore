@@ -1,3 +1,9 @@
+# Add to server/.gitignore
+scripts/
+tests/
+jest.config.js
+coverage/
+
 # Environment Variables (CRITICAL - Contains secrets!)
 .env
 .env.local

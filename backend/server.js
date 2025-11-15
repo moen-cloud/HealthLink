@@ -11,13 +11,13 @@ const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
 const appointmentRoutes = require('./routes/appointments');
 const triageRoutes = require('./routes/triage');
-const chatRoutes = require('./routes/chat');
+const chatRoutes = require('./routes/chat'); // ✅ KEEP - Chat feature
 
 // Initialize app
 const app = express();
 const server = http.createServer(app);
 
-// Socket.io setup with CORS
+// Socket.io setup with CORS - ✅ KEEP - For chat
 const io = new Server(server, {
   cors: {
     origin: [
@@ -32,10 +32,8 @@ const io = new Server(server, {
   transports: ['websocket', 'polling']
 });
 
-// Connect to database (skip in test environment)
-if (process.env.NODE_ENV !== 'test') {
-  connectDB();
-}
+// Connect to database
+connectDB();
 
 // Middleware
 app.use(cors({
@@ -64,26 +62,14 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/appointments', appointmentRoutes);
 app.use('/api/triage', triageRoutes);
-app.use('/api/chat', chatRoutes);
+app.use('/api/chat', chatRoutes); // ✅ KEEP - Chat routes
 
 // Health check route
 app.get('/api/health', (req, res) => {
   res.status(200).json({
     success: true,
     message: 'HealthLink API is running',
-    timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV
-  });
-});
-
-// Status check route
-app.get('/api/status', (req, res) => {
-  const mongoose = require('mongoose');
-  res.status(200).json({
-    success: true,
-    database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
-    uptime: process.uptime(),
-    memory: process.memoryUsage()
+    timestamp: new Date().toISOString()
   });
 });
 
@@ -122,24 +108,21 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Socket.io Connection Handler
+// ✅ KEEP - Socket.io for real-time chat
 const onlineUsers = new Map();
 
 io.use((socket, next) => {
   try {
     const token = socket.handshake.auth.token;
     if (!token) {
-      console.log('Socket: No token provided');
-      return next(new Error('Authentication error: No token'));
+      return next(new Error('Authentication error'));
     }
     
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     socket.userId = decoded.id;
-    console.log('Socket authenticated for user:', decoded.id);
     next();
   } catch (err) {
-    console.error('Socket auth error:', err.message);
-    next(new Error('Authentication error: Invalid token'));
+    next(new Error('Authentication error'));
   }
 });
 
@@ -180,18 +163,13 @@ io.on('connection', (socket) => {
   });
 });
 
-// Start server (skip in test environment)
+// Start server
 const PORT = process.env.PORT || 5000;
 
-if (process.env.NODE_ENV !== 'test') {
-  server.listen(PORT, () => {
-    console.log(`\n🚀 HealthLink Server running on port ${PORT}`);
-    console.log(`📍 Environment: ${process.env.NODE_ENV || 'development'}`);
-    console.log(`🌐 API URL: http://localhost:${PORT}`);
-    console.log(`💬 Socket.io enabled`);
-    console.log(`✅ Health check: http://localhost:${PORT}/api/health\n`);
-  });
-}
-
-// Export app for testing
-module.exports = app;
+server.listen(PORT, () => {
+  console.log(`\n🚀 HealthLink Server running on port ${PORT}`);
+  console.log(`📍 Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`🌐 API URL: http://localhost:${PORT}`);
+  console.log(`💬 Socket.io enabled`);
+  console.log(`✅ Health check: http://localhost:${PORT}/api/health\n`);
+});

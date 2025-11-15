@@ -1,18 +1,14 @@
 {
   "name": "healthlink",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "HealthLink Digital E-Clinic API",
+  "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "seed": "node seed.js",
-    "test": "jest --detectOpenHandles",
-    "test:watch": "jest --watch",
-    "backup": "node scripts/backup-db.js",
-    "lint": "eslint . --ext .js"
+    "seed": "node seed.js"
   },
-  "keywords": [],
+  "keywords": ["healthcare", "telemedicine", "triage"],
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -23,13 +19,9 @@
     "express-validator": "^7.3.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.19.2",
-    "socket.io": "^4.8.1",
-    "node-cron": "^3.0.3",
-    "nodemailer": "^6.9.7"
+    "socket.io": "^4.8.1"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10",
-    "jest": "^29.7.0",
-    "supertest": "^6.3.3"
+    "nodemon": "^3.1.10"
   }
 }
