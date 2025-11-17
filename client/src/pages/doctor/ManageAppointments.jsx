@@ -129,25 +129,25 @@ const ManageAppointments = () => {
                       </span>
                     </div>
 
-                    {/* Patient Info */}
+                    {/* Patient Info - ✅ FIXED: Added null checks */}
                     <div className="mb-4 bg-gray-50 rounded-lg p-4">
                       <h3 className="text-lg font-semibold text-gray-900 mb-2">Patient Information</h3>
                       <div className="grid grid-cols-2 gap-4 text-sm">
                         <div>
                           <span className="text-gray-600">Name:</span>
-                          <span className="ml-2 font-medium">{appointment.userId.name}</span>
+                          <span className="ml-2 font-medium">{appointment.userId?.name || 'Unknown Patient'}</span>
                         </div>
                         <div>
                           <span className="text-gray-600">Email:</span>
-                          <span className="ml-2 font-medium">{appointment.userId.email}</span>
+                          <span className="ml-2 font-medium">{appointment.userId?.email || 'N/A'}</span>
                         </div>
-                        {appointment.userId.phone && (
+                        {appointment.userId?.phone && (
                           <div>
                             <span className="text-gray-600">Phone:</span>
                             <span className="ml-2 font-medium">{appointment.userId.phone}</span>
                           </div>
                         )}
-                        {appointment.userId.age && (
+                        {appointment.userId?.age && (
                           <div>
                             <span className="text-gray-600">Age:</span>
                             <span className="ml-2 font-medium">{appointment.userId.age} years</span>
@@ -203,7 +203,7 @@ const ManageAppointments = () => {
           </div>
         )}
 
-        {/* Review Modal */}
+        {/* Review Modal - ✅ FIXED: Added null checks */}
         {modalOpen && selectedAppointment && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-8 fade-in">
@@ -211,7 +211,7 @@ const ManageAppointments = () => {
 
               {/* Patient Info Summary */}
               <div className="bg-gray-50 rounded-lg p-4 mb-6">
-                <h3 className="font-semibold text-gray-900 mb-2">Patient: {selectedAppointment.userId.name}</h3>
+                <h3 className="font-semibold text-gray-900 mb-2">Patient: {selectedAppointment.userId?.name || 'Unknown Patient'}</h3>
                 <p className="text-sm text-gray-600 mb-2">
                   Preferred Date: {new Date(selectedAppointment.preferredDate).toLocaleDateString()}
                 </p>

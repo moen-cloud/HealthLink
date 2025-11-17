@@ -188,7 +188,7 @@ const DoctorDashboard = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Pending Appointments */}
+          {/* Pending Appointments - ✅ FIXED: Added null checks */}
           <div className="bg-white rounded-xl shadow-md p-6">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-gray-900">Pending Appointments</h2>
@@ -229,7 +229,7 @@ const DoctorDashboard = () => {
             )}
           </div>
 
-          {/* High Risk Triages */}
+          {/* High Risk Triages - ✅ FIXED: Added null checks */}
           <div className="bg-white rounded-xl shadow-md p-6">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-gray-900">High Risk Cases</h2>

@@ -147,25 +147,25 @@ const ManageTriages = () => {
                       </span>
                     </div>
 
-                    {/* Patient Info */}
+                    {/* Patient Info - ✅ FIXED: Added null checks */}
                     <div className="mb-4 bg-gray-50 rounded-lg p-4">
                       <h3 className="text-lg font-semibold text-gray-900 mb-2">Patient Information</h3>
                       <div className="grid grid-cols-2 gap-4 text-sm">
                         <div>
                           <span className="text-gray-600">Name:</span>
-                          <span className="ml-2 font-medium">{triage.userId.name}</span>
+                          <span className="ml-2 font-medium">{triage.userId?.name || 'Unknown Patient'}</span>
                         </div>
                         <div>
                           <span className="text-gray-600">Email:</span>
-                          <span className="ml-2 font-medium">{triage.userId.email}</span>
+                          <span className="ml-2 font-medium">{triage.userId?.email || 'N/A'}</span>
                         </div>
-                        {triage.userId.age && (
+                        {triage.userId?.age && (
                           <div>
                             <span className="text-gray-600">Age:</span>
                             <span className="ml-2 font-medium">{triage.userId.age} years</span>
                           </div>
                         )}
-                        {triage.userId.gender && (
+                        {triage.userId?.gender && (
                           <div>
                             <span className="text-gray-600">Gender:</span>
                             <span className="ml-2 font-medium capitalize">{triage.userId.gender}</span>
@@ -237,7 +237,7 @@ const ManageTriages = () => {
           </div>
         )}
 
-        {/* Response Modal */}
+        {/* Response Modal - ✅ FIXED: Added null checks */}
         {modalOpen && selectedTriage && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-8 fade-in">
@@ -248,7 +248,7 @@ const ManageTriages = () => {
                 <div className="flex items-center gap-3 mb-2">
                   <span className="text-2xl">{getRiskIcon(selectedTriage.riskLevel)}</span>
                   <h3 className="font-semibold text-gray-900">
-                    Patient: {selectedTriage.userId.name} ({selectedTriage.riskLevel.toUpperCase()} RISK)
+                    Patient: {selectedTriage.userId?.name || 'Unknown Patient'} ({selectedTriage.riskLevel.toUpperCase()} RISK)
                   </h3>
                 </div>
                 <p className="text-sm text-gray-700 mt-2">{selectedTriage.recommendation}</p>
