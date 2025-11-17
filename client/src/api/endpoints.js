@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // ✅ Base URL (works for Vite + backend)
-axios.defaults.baseURL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+axios.defaults.baseURL = `${import.meta.env.VITE_API_URL || "http://localhost:5000"}/api`;
 
 // ✅ Auto-attach token
 axios.interceptors.request.use((config) => {

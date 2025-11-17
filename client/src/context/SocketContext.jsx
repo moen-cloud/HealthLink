@@ -26,11 +26,13 @@ export const SocketProvider = ({ children }) => {
     }
 
     // ✅ FIXED: Don't add /api - Socket.io connects to root
-    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+    const SOCKET_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
     
-    console.log('Socket: Attempting to connect to:', API_URL);
+    console.log('Socket: Attempting to connect to:', SOCKET_URL);
+
     
-    const newSocket = io(API_URL, {
+    const newSocket = io(SOCKET_URL, {
       auth: { token },
       transports: ['websocket', 'polling'],
       reconnection: true,
