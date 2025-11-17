@@ -13,6 +13,11 @@ const ChatWindow = ({ selectedUser, onClose }) => {
   const messagesEndRef = useRef(null);
   const typingTimeoutRef = useRef(null);
 
+  // ✅ FIX: Add safety check for selectedUser
+  if (!selectedUser) {
+    return null;
+  }
+
   const conversationId = [user.id, selectedUser._id].sort().join('_');
 
   useEffect(() => {
@@ -120,14 +125,14 @@ const ChatWindow = ({ selectedUser, onClose }) => {
         <div className="flex items-center gap-3">
           <div className="relative">
             <div className="w-10 h-10 bg-white text-purple-600 rounded-full flex items-center justify-center font-bold">
-              {selectedUser.name.charAt(0).toUpperCase()}
+              {selectedUser?.name?.charAt(0).toUpperCase() || '?'}
             </div>
             {isUserOnline(selectedUser._id) && (
               <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-400 border-2 border-white rounded-full"></div>
             )}
           </div>
           <div>
-            <h3 className="font-semibold">{selectedUser.name}</h3>
+            <h3 className="font-semibold">{selectedUser?.name || 'Unknown User'}</h3>
             <p className="text-xs opacity-90">
               {isUserOnline(selectedUser._id) ? 'Online' : 'Offline'}
             </p>
@@ -154,6 +159,11 @@ const ChatWindow = ({ selectedUser, onClose }) => {
           </div>
         ) : (
           messages.map((msg, index) => {
+            // ✅ FIX: Add null checks for msg.senderId
+            if (!msg || !msg.senderId) {
+              return null; // Skip invalid messages
+            }
+
             // My message = right side, Their message = left side
             const isMyMessage = msg.senderId._id === user.id;
             
@@ -166,7 +176,7 @@ const ChatWindow = ({ selectedUser, onClose }) => {
                   {/* Avatar for received messages (left side) */}
                   {!isMyMessage && (
                     <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
-                      {selectedUser.name.charAt(0).toUpperCase()}
+                      {selectedUser?.name?.charAt(0).toUpperCase() || '?'}
                     </div>
                   )}
                   
@@ -194,7 +204,7 @@ const ChatWindow = ({ selectedUser, onClose }) => {
                   {/* Avatar for sent messages (right side) */}
                   {isMyMessage && (
                     <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-teal-500 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
-                      {user.name.charAt(0).toUpperCase()}
+                      {user?.name?.charAt(0).toUpperCase() || '?'}
                     </div>
                   )}
                 </div>
@@ -208,7 +218,7 @@ const ChatWindow = ({ selectedUser, onClose }) => {
           <div className="flex justify-start">
             <div className="flex items-end gap-2">
               <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-white text-sm font-bold">
-                {selectedUser.name.charAt(0).toUpperCase()}
+                {selectedUser?.name?.charAt(0).toUpperCase() || '?'}
               </div>
               <div className="bg-white rounded-2xl rounded-bl-none px-4 py-3 shadow-sm border border-gray-200">
                 <div className="flex gap-1">
